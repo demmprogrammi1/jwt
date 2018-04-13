@@ -1,7 +1,10 @@
-from flask import jsonify
+from flask import jsonify, Flask
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from run import db
+app = Flask(__name__)
+app.config.from_pyfile('config.py')
+db = SQLAlchemy(app)
 
 
 class User(db.Model):

@@ -1,13 +1,6 @@
-from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
+from flask import request
 
 from models import *
-
-app = Flask(__name__)
-
-app.config.from_pyfile('config.py')
-
-db = SQLAlchemy(app)
 
 
 @app.route('/')
