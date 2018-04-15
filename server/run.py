@@ -1,6 +1,7 @@
 from models import db,app,User,Post
-import json,jwt
+import json,jwt,datetime
 from flask import request,make_response
+from flask_jwt import jwt_required
 db.create_all()
 
 @app.route('/')
@@ -60,10 +61,8 @@ def login():
 @app.route('/users/',methods=['GET'])
 def get():
     # get the auth token
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        auth_token = auth_header.split(" ")[1]
-    else:
+    auth_token = request.headers.get('Authorization')
+    if auth_token is None:
         return make_response(json.dumps({
             'message' : 'no auth header'
         }),400)
@@ -86,6 +85,24 @@ def get():
         }
         return make_response(json.dumps(responseObject)), 401
 
-     
+@app.route('/add',methods=["POST"])
+#@jwt_required()
+def create():
+    auth = request.headers.get('Authorization')
+    if auth is None:
+        return make_response(json.dumps({
+            'message' : 'no auth token'
+        }),401)
+    else:
+        userId = User.decode_auth_token(auth)
+        newPost = request.get_json()
+        post = Post(owner=userId,created_at=datetime.datetime.now(),text=newPost['text'])
+        db.session.add(post)
+        db.session.commit()
+        return make_response(json.dumps({
+            'message' : 'new post is added'
+        }),200)
+
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

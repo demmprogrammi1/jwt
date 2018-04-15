@@ -1,5 +1,6 @@
 from flask import jsonify, Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt import jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt,json
 import datetime
@@ -81,5 +82,21 @@ class Post(db.Model):
             'post_id' : self.post_id,
             'owner' : self.owner,
             'created_at' : self.created_at,
+            'text' : self.text
+        }
+
+class Comment(db.Model):
+    __tablename__ = 'Comments'
+
+    comment_id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    post_id = db.Column(db.Integer,db.ForeignKey('Posts.post_id'),nullable=False,primary_key=True)
+    owner = db.Column(db.Integer,db.ForeignKey('Users.userId'),nullable=False,primary_key=True)
+    text = db.Column(db.Text)
+    
+    def repr(self):
+        return {
+            'comment_id' : self.comment_id,
+            'post_id' : self.post_id,
+            'owner' : self.owner,
             'text' : self.text
         }
