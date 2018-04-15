@@ -11,8 +11,9 @@ import retrofit2.http.*
 class ClientAPI {
 
     interface APIService {
-        @GET("/users/{user}")
-        fun greetUser(@Path("user") user: String): Call<ResponseBody>
+        @Headers("Authorization: $token")
+        @GET("/users/")
+        fun greetUser(token : String): Call<ResponseBody>
 
         @Headers("Content-type: application/json")
         @POST("/register")

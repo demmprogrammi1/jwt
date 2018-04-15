@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
                         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                             if (response.isSuccessful) {
                                 val msg = response.body()?.string()
+                                var token = response.body()?.get("Auth_token")
+                                // TODO with token
                                 println("---TTTT :: POST msg from server :: " + msg)
                                 Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
                             }
